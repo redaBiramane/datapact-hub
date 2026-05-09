@@ -6,6 +6,80 @@ import {
 } from 'lucide-react';
 import { supabase } from './supabase';
 
+const MOCK_ASSETS = [
+  {
+    id: '1',
+    name: 'users_analytics_events',
+    techName: 'topic.analytics.events.v1',
+    engine: 'Kafka',
+    type: 'Kafka Stream',
+    domain: 'Analytics',
+    status: 'v1.2 Active',
+    statusClass: 'status-live',
+    statusColor: 'var(--success)',
+    description: 'Stream of user events from the web application for analytics purposes.',
+    schema: [
+      { name: 'user_id', type: 'string', desc: 'UUID v4', nullPercent: '0.0%' },
+      { name: 'email', type: 'string', desc: 'Email Address', nullPercent: '0.1%' },
+      { name: 'event_type', type: 'string', desc: 'Alphanumeric', nullPercent: '0.0%' }
+    ],
+    cluster: 'lkc-px23m',
+    region: 'eu-west-1 (AWS)',
+    partitions: '32',
+    volume: '14.2 GB',
+    events: '24,150,000',
+    owner: 'Data Engineering Core'
+  },
+  {
+    id: '2',
+    name: 'core_customers',
+    techName: 'model.analytics.core_customers',
+    engine: 'dbt',
+    type: 'dbt Model',
+    domain: 'Data Engineering',
+    status: 'v1.0 Active',
+    statusClass: 'status-live',
+    statusColor: 'var(--success)',
+    description: 'Gold-level denormalized view of customer profiles, combining Stripe and CRM data. Built via dbt.',
+    schema: [
+      { name: 'customer_id', type: 'string', desc: 'Stripe ID', nullPercent: '0.0%' },
+      { name: 'ltv', type: 'float', desc: 'Lifetime Value USD', nullPercent: '2.4%' },
+      { name: 'signup_date', type: 'date', desc: 'ISO Date', nullPercent: '0.0%' },
+      { name: 'segment', type: 'string', desc: 'Enum: B2B/B2C', nullPercent: '0.0%' }
+    ],
+    cluster: 'dbt Cloud',
+    region: 'us-east-1',
+    partitions: 'N/A',
+    volume: '85.4 GB',
+    events: 'Daily Run',
+    owner: 'Analytics Engineering'
+  },
+  {
+    id: '3',
+    name: 'marketing_campaign_results',
+    techName: 'ANALYTICS_DB.MARKETING.CAMPAIGN_RESULTS',
+    engine: 'Snowflake',
+    type: 'Snowflake Table',
+    domain: 'Marketing',
+    status: 'Draft Review',
+    statusClass: '',
+    statusColor: '#D97706',
+    description: 'Daily aggregation of marketing campaign performance from Facebook and Google Ads.',
+    schema: [
+      { name: 'campaign_id', type: 'string', desc: 'Ad Platform ID', nullPercent: '0.0%' },
+      { name: 'platform', type: 'string', desc: 'FB/Google', nullPercent: '0.0%' },
+      { name: 'spend', type: 'float', desc: 'Daily Spend USD', nullPercent: '0.0%' },
+      { name: 'conversions', type: 'int', desc: 'Total Conversions', nullPercent: '12.5%' }
+    ],
+    cluster: 'sf-marketing-wh',
+    region: 'aws-eu-central-1',
+    partitions: 'Time-clustered',
+    volume: '3.2 TB',
+    events: '120,400 rows',
+    owner: 'Marketing Data Team'
+  }
+];
+
 function App() {
   const [activeGlobalNav, setActiveGlobalNav] = useState('home'); // home, catalog, asset_detail
   const [activeAssetNav, setActiveAssetNav] = useState('contract'); // asset, contract, changes, action, settings
@@ -45,11 +119,11 @@ function App() {
     fetchFromSupabase();
   }, []);
   
+  const [selectedAssetId, setSelectedAssetId] = useState('1');
+  const currentAsset = MOCK_ASSETS.find(a => a.id === selectedAssetId) || MOCK_ASSETS[0];
+
   // Asset States
-  const [assetName, setAssetName] = useState('users_analytics_events');
   const [environment, setEnvironment] = useState('Production');
-  const [engine, setEngine] = useState('Kafka');
-  const [description, setDescription] = useState('Stream of user events from the web application for analytics purposes.');
   const [freshness, setFreshness] = useState('< 5 minutes');
   const [availability, setAvailability] = useState('99.9%');
   const [maxNull, setMaxNull] = useState('0.1%');
@@ -115,7 +189,8 @@ function App() {
 
   const toggleEditMode = () => setEditMode(editMode === 'ui' ? 'yaml' : 'ui');
 
-  const goToAssetDetail = () => {
+  const goToAssetDetail = (id) => {
+    setSelectedAssetId(id);
     setActiveGlobalNav('asset_detail');
     setActiveAssetNav('contract');
   };
@@ -313,42 +388,24 @@ function App() {
                   <tr><th>Asset Name</th><th>Engine</th><th>Domain</th><th>Contract Status</th><th>Action</th></tr>
                 </thead>
                 <tbody>
-                  <tr style={{ cursor: 'pointer' }} onClick={goToAssetDetail} className="hover-row">
-                    <td>
-                      <div style={{ fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Database size={16} color="var(--accent)" /> users_analytics_events
-                      </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>topic.analytics.events.v1</div>
-                    </td>
-                    <td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 8px', borderRadius: '4px', fontSize: '12px' }}>Kafka</span></td>
-                    <td>Analytics</td>
-                    <td><span className="status-badge status-live" style={{ padding: '4px 8px' }}>Active v1.2</span></td>
-                    <td><ChevronRight size={18} color="var(--text-muted)" /></td>
-                  </tr>
-                  <tr className="hover-row">
-                    <td>
-                      <div style={{ fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Database size={16} color="var(--text-muted)" /> payment_transactions
-                      </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>db.finance.payments</div>
-                    </td>
-                    <td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 8px', borderRadius: '4px', fontSize: '12px' }}>PostgreSQL</span></td>
-                    <td>Finance</td>
-                    <td><span className="status-badge" style={{ backgroundColor: '#FEF3C7', color: '#D97706', padding: '4px 8px', border: 'none' }}>Draft Review</span></td>
-                    <td><ChevronRight size={18} color="var(--text-muted)" /></td>
-                  </tr>
-                  <tr className="hover-row">
-                    <td>
-                      <div style={{ fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Database size={16} color="var(--text-muted)" /> marketing_campaign_results
-                      </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>wh.marketing.campaigns</div>
-                    </td>
-                    <td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 8px', borderRadius: '4px', fontSize: '12px' }}>Snowflake</span></td>
-                    <td>Marketing</td>
-                    <td><span className="status-badge" style={{ backgroundColor: '#F3F4F6', color: 'var(--text-muted)', padding: '4px 8px', border: 'none' }}>Unprotected</span></td>
-                    <td><ChevronRight size={18} color="var(--text-muted)" /></td>
-                  </tr>
+                  {MOCK_ASSETS.map((asset) => (
+                    <tr key={asset.id} style={{ cursor: 'pointer' }} onClick={() => goToAssetDetail(asset.id)} className="hover-row">
+                      <td>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Database size={16} color="var(--accent)" /> {asset.name}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>{asset.techName}</div>
+                      </td>
+                      <td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 8px', borderRadius: '4px', fontSize: '12px' }}>{asset.engine}</span></td>
+                      <td>{asset.domain}</td>
+                      <td>
+                        <span className={asset.statusClass || "status-badge"} style={{ padding: '4px 8px', backgroundColor: !asset.statusClass ? '#FEF3C7' : '', color: !asset.statusClass ? '#D97706' : '', border: !asset.statusClass ? 'none' : '' }}>
+                          {asset.status}
+                        </span>
+                      </td>
+                      <td><ChevronRight size={18} color="var(--text-muted)" /></td>
+                    </tr>
+                  ))}
                   <tr className="hover-row">
                     <td>
                       <div style={{ fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -376,11 +433,11 @@ function App() {
               <div className="header-row" style={{ paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', marginBottom: '2.5rem' }}>
                 <div>
                   <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                    Asset / Analytics / Kafka
+                    Asset / {currentAsset.domain} / {currentAsset.engine}
                   </div>
                   <div className="page-title">
-                    {assetName}
-                    <span className="status-badge status-live">v1.2 Active</span>
+                    {currentAsset.name}
+                    <span className={currentAsset.statusClass || "status-badge"} style={{ backgroundColor: !currentAsset.statusClass ? '#FEF3C7' : '', color: !currentAsset.statusClass ? '#D97706' : '', border: !currentAsset.statusClass ? 'none' : '' }}>{currentAsset.status}</span>
                   </div>
                 </div>
                 {activeAssetNav === 'contract' && (
@@ -395,10 +452,10 @@ function App() {
                   <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '1.5rem' }}>
                     <div style={{ width: '64px', height: '64px', borderRadius: '12px', backgroundColor: '#E0E7FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4F46E5' }}><Database size={32} /></div>
                     <div style={{ flex: 1 }}>
-                      <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-main)' }}>topic.analytics.events.v1</h3>
+                      <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-main)' }}>{currentAsset.techName}</h3>
                       <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Box size={14} /> Kafka Stream</span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><CheckCircle2 size={14} color="var(--success)" /> Connected to Confluent Cloud</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Box size={14} /> {currentAsset.type}</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><CheckCircle2 size={14} color="var(--success)" /> Connected</span>
                       </div>
                     </div>
                   </div>
@@ -407,16 +464,16 @@ function App() {
                     <div>
                       <div className="section-label">Source System Overview</div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Cluster ID</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>lkc-px23m</span></div>
-                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Region</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>eu-west-1 (AWS)</span></div>
-                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Partitions</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>32</span></div>
+                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Cluster ID</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{currentAsset.cluster}</span></div>
+                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Region</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{currentAsset.region}</span></div>
+                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Partitions</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{currentAsset.partitions}</span></div>
                       </div>
                     </div>
                     <div>
                       <div className="section-label">Data Profiling (Last 24h)</div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Volume</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>14.2 GB</span></div>
-                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Events Processed</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>24,150,000</span></div>
+                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Volume</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{currentAsset.volume}</span></div>
+                        <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Events Processed</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{currentAsset.events}</span></div>
                         <div style={{ padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Avg Event Size</span><span style={{ fontWeight: 600, fontSize: '0.875rem' }}>612 bytes</span></div>
                       </div>
                     </div>
@@ -430,9 +487,9 @@ function App() {
                       <table className="data-table" style={{ margin: 0 }}>
                         <thead style={{ backgroundColor: '#F9FAFB' }}><tr><th>Field Name</th><th>Inferred Type</th><th>Detected Format</th><th>Null %</th></tr></thead>
                         <tbody>
-                          <tr><td style={{ fontWeight: 500 }}>user_id</td><td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 6px', borderRadius: '4px', fontSize: '12px', fontFamily: 'monospace' }}>string</span></td><td>UUID v4</td><td style={{ color: 'var(--success)', fontWeight: 500 }}>0.0%</td></tr>
-                          <tr><td style={{ fontWeight: 500 }}>email</td><td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 6px', borderRadius: '4px', fontSize: '12px', fontFamily: 'monospace' }}>string</span></td><td>Email Address</td><td style={{ color: 'var(--success)', fontWeight: 500 }}>0.1%</td></tr>
-                          <tr><td style={{ fontWeight: 500 }}>event_type</td><td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 6px', borderRadius: '4px', fontSize: '12px', fontFamily: 'monospace' }}>string</span></td><td>Alphanumeric</td><td style={{ color: 'var(--success)', fontWeight: 500 }}>0.0%</td></tr>
+                          {currentAsset.schema.map((field, idx) => (
+                            <tr key={idx}><td style={{ fontWeight: 500 }}>{field.name}</td><td><span style={{ backgroundColor: '#F3F4F6', padding: '2px 6px', borderRadius: '4px', fontSize: '12px', fontFamily: 'monospace' }}>{field.type}</span></td><td>{field.desc}</td><td style={{ color: field.nullPercent === '0.0%' ? 'var(--success)' : '#D97706', fontWeight: 500 }}>{field.nullPercent}</td></tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
@@ -456,11 +513,11 @@ function App() {
                     <div>
                       <div className="section-label">1. Asset Metadata</div>
                       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                        <div className="input-wrapper"><Box size={18} className="input-icon" /><input type="text" className="text-input" value={assetName} onChange={e => setAssetName(e.target.value)} /></div>
+                        <div className="input-wrapper"><Box size={18} className="input-icon" /><input type="text" className="text-input" value={currentAsset.name} readOnly /></div>
                         <select className="text-input" value={environment} onChange={e => setEnvironment(e.target.value)}><option>Production</option><option>Staging</option></select>
-                        <select className="text-input" value={engine} onChange={e => setEngine(e.target.value)}><option>Kafka</option><option>Snowflake</option></select>
+                        <select className="text-input" value={currentAsset.engine} disabled><option>{currentAsset.engine}</option></select>
                       </div>
-                      <textarea className="text-input" rows="2" value={description} onChange={e => setDescription(e.target.value)} placeholder="Business description..." style={{ width: '100%', resize: 'none' }}></textarea>
+                      <textarea className="text-input" rows="2" value={currentAsset.description} readOnly placeholder="Business description..." style={{ width: '100%', resize: 'none' }}></textarea>
                     </div>
                     <div>
                       <div className="contract-header">
@@ -583,8 +640,8 @@ function App() {
 
             {/* Context Panel specific to the Asset */}
             <div className="context-panel">
-              <div className="info-row" style={{ paddingTop: 0 }}><span className="info-label">Domain</span><span className="info-value">Analytics</span></div>
-              <div className="info-row"><span className="info-label">Technical Owner</span><span className="info-value"><img src="https://i.pravatar.cc/150?img=33" alt="Avatar" style={{ width: 24, height: 24, borderRadius: '50%' }} /> Data Engineering Core</span></div>
+              <div className="info-row" style={{ paddingTop: 0 }}><span className="info-label">Domain</span><span className="info-value">{currentAsset.domain}</span></div>
+              <div className="info-row"><span className="info-label">Technical Owner</span><span className="info-value"><img src="https://i.pravatar.cc/150?img=33" alt="Avatar" style={{ width: 24, height: 24, borderRadius: '50%' }} /> {currentAsset.owner}</span></div>
               <div className="info-row">
                 <span className="info-label">Subscribers</span>
                 <div className="avatar-group">
