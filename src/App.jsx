@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, Database, FileText, GitCommit, PlaySquare, Settings, CheckCircle2, XCircle, 
   Loader2, Sparkles, Clock, Shield, Activity, GitBranch, Save, LayoutDashboard, Library, 
   BarChart3, Users, ChevronRight, AlertCircle, ArrowUpRight, ArrowDownRight
 } from 'lucide-react';
+import { supabase } from './supabase';
 
 function App() {
   const [activeGlobalNav, setActiveGlobalNav] = useState('home'); // home, catalog, asset_detail
   const [activeAssetNav, setActiveAssetNav] = useState('contract'); // asset, contract, changes, action, settings
   const [editMode, setEditMode] = useState('ui'); 
   const [piiAllowed, setPiiAllowed] = useState(false);
+  
+  // Real DB Data
+  const [dbAssets, setDbAssets] = useState([]);
+  const [dbLoading, setDbLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchFromSupabase() {
+      // Only fetch if Supabase URL is configured
+      if (!import.meta.env.VITE_SUPABASE_URL) return;
+      
+      setDbLoading(true);
+      try {
+        const { data, error } = await supabase.from('data_assets').select('*');
+        if (data) setDbAssets(data);
+      } catch (err) {
+        console.error('Supabase fetch error:', err);
+      } finally {
+        setDbLoading(false);
+      }
+    }
+    fetchFromSupabase();
+  }, []);
   
   // Asset States
   const [assetName, setAssetName] = useState('users_analytics_events');
