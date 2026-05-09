@@ -106,30 +106,26 @@ function App() {
           </a>
         </nav>
 
-        {activeGlobalNav === 'asset_detail' && (
-          <>
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem', paddingLeft: '1rem' }}>
-              Current Asset
-            </div>
-            <nav className="nav-menu" style={{ flex: 1 }}>
-              <a className={`nav-item ${activeAssetNav === 'asset' ? 'active' : ''}`} onClick={() => setActiveAssetNav('asset')}>
-                <Database size={18} /><span>Source Asset</span>
-              </a>
-              <a className={`nav-item ${activeAssetNav === 'contract' ? 'active' : ''}`} onClick={() => setActiveAssetNav('contract')}>
-                <FileText size={18} /><span>Data Contract</span>
-              </a>
-              <a className={`nav-item ${activeAssetNav === 'changes' ? 'active' : ''}`} onClick={() => setActiveAssetNav('changes')}>
-                <GitCommit size={18} /><span>Changes</span>
-              </a>
-              <a className={`nav-item ${activeAssetNav === 'action' ? 'active' : ''}`} onClick={() => setActiveAssetNav('action')}>
-                <PlaySquare size={18} /><span>Action & Logs</span>
-              </a>
-              <a className={`nav-item ${activeAssetNav === 'settings' ? 'active' : ''}`} onClick={() => setActiveAssetNav('settings')}>
-                <Settings size={18} /><span>Settings</span>
-              </a>
-            </nav>
-          </>
-        )}
+        <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem', paddingLeft: '1rem' }}>
+          Current Asset
+        </div>
+        <nav className="nav-menu" style={{ flex: 1 }}>
+          <a className={`nav-item ${activeGlobalNav === 'asset_detail' && activeAssetNav === 'asset' ? 'active' : ''}`} onClick={() => { setActiveGlobalNav('asset_detail'); setActiveAssetNav('asset'); }}>
+            <Database size={18} /><span>Source Asset</span>
+          </a>
+          <a className={`nav-item ${activeGlobalNav === 'asset_detail' && activeAssetNav === 'contract' ? 'active' : ''}`} onClick={() => { setActiveGlobalNav('asset_detail'); setActiveAssetNav('contract'); }}>
+            <FileText size={18} /><span>Data Contract</span>
+          </a>
+          <a className={`nav-item ${activeGlobalNav === 'asset_detail' && activeAssetNav === 'changes' ? 'active' : ''}`} onClick={() => { setActiveGlobalNav('asset_detail'); setActiveAssetNav('changes'); }}>
+            <GitCommit size={18} /><span>Changes</span>
+          </a>
+          <a className={`nav-item ${activeGlobalNav === 'asset_detail' && activeAssetNav === 'action' ? 'active' : ''}`} onClick={() => { setActiveGlobalNav('asset_detail'); setActiveAssetNav('action'); }}>
+            <PlaySquare size={18} /><span>Action & Logs</span>
+          </a>
+          <a className={`nav-item ${activeGlobalNav === 'asset_detail' && activeAssetNav === 'settings' ? 'active' : ''}`} onClick={() => { setActiveGlobalNav('asset_detail'); setActiveAssetNav('settings'); }}>
+            <Settings size={18} /><span>Settings</span>
+          </a>
+        </nav>
 
         <div className="user-profile" style={{ marginTop: activeGlobalNav === 'asset_detail' ? 'auto' : 'auto' }}>
           <img src="https://i.pravatar.cc/150?img=11" alt="Profile" />
