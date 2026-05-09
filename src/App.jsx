@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Box, Database, FileText, GitCommit, PlaySquare, Settings, CheckCircle2, XCircle, 
   Loader2, Sparkles, Clock, Shield, Activity, GitBranch, Save, LayoutDashboard, Library, 
-  BarChart3, Users, ChevronRight, AlertCircle, ArrowUpRight, ArrowDownRight
+  BarChart3, Users, ChevronRight, AlertCircle, ArrowUpRight, ArrowDownRight, Globe, Sun, Moon, LogOut
 } from 'lucide-react';
 import { supabase } from './supabase';
 
@@ -85,6 +85,8 @@ function App() {
   const [activeAssetNav, setActiveAssetNav] = useState('contract'); // asset, contract, changes, action, settings
   const [editMode, setEditMode] = useState('ui'); 
   const [piiAllowed, setPiiAllowed] = useState(false);
+  const [theme, setTheme] = useState('light');
+  const [language, setLanguage] = useState('EN');
   
   const [dbAssets, setDbAssets] = useState([]);
   const [dbLoading, setDbLoading] = useState(false);
@@ -236,8 +238,8 @@ function App() {
           </a>
         </nav>
 
-        <div className="user-profile" style={{ cursor: 'pointer', marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }} onClick={() => setActiveGlobalNav('user_profile')}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="user-profile" style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', width: '100%' }} onClick={() => setActiveGlobalNav('user_profile')}>
             <img src="https://i.pravatar.cc/150?img=11" alt="Profile" />
             <div className="user-info">
               <span className="user-name">Sarah Jenkins</span>
@@ -245,26 +247,42 @@ function App() {
             </div>
           </div>
           
-          <div style={{ 
-            fontSize: '10px', 
-            padding: '4px 8px', 
-            borderRadius: '4px', 
-            backgroundColor: connectionStatus === 'connected' ? 'rgba(16, 185, 129, 0.1)' : connectionStatus === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)',
-            color: connectionStatus === 'connected' ? '#10b981' : connectionStatus === 'error' ? '#ef4444' : 'rgba(255,255,255,0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            fontWeight: 600
-          }}>
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: connectionStatus === 'connected' ? '#10b981' : connectionStatus === 'error' ? '#ef4444' : 'rgba(255,255,255,0.2)' }}></div>
-            Supabase: {connectionStatus}
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+            <div style={{ 
+              fontSize: '10px', 
+              padding: '4px 8px', 
+              borderRadius: '4px', 
+              backgroundColor: connectionStatus === 'connected' ? 'rgba(16, 185, 129, 0.1)' : connectionStatus === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)',
+              color: connectionStatus === 'connected' ? '#10b981' : connectionStatus === 'error' ? '#ef4444' : 'rgba(255,255,255,0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              fontWeight: 600
+            }}>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: connectionStatus === 'connected' ? '#10b981' : connectionStatus === 'error' ? '#ef4444' : 'rgba(255,255,255,0.2)' }}></div>
+              Supabase: {connectionStatus}
+            </div>
+            
+            <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Log out" onClick={(e) => { e.stopPropagation(); alert('Logged out'); }}>
+              <LogOut size={16} />
+            </button>
           </div>
         </div>
       </aside>
 
-      <div className="app-container">
+      <div className="app-container" style={{ position: 'relative' }}>
+        
+        {/* TOP RIGHT UTILITIES */}
+        <div style={{ position: 'absolute', top: '1.5rem', right: '2rem', display: 'flex', gap: '0.75rem', zIndex: 100 }}>
+          <button className="btn" onClick={() => setLanguage(language === 'EN' ? 'FR' : 'EN')} style={{ backgroundColor: 'white', border: '1px solid var(--border-color)', padding: '0.5rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', borderRadius: '8px' }}>
+            <Globe size={16} /> {language}
+          </button>
+          <button className="btn" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} style={{ backgroundColor: 'white', border: '1px solid var(--border-color)', padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)', borderRadius: '8px' }}>
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+        </div>
         
         {/* --- GLOBAL DASHBOARD (HOME) --- */}
         {activeGlobalNav === 'home' && (
