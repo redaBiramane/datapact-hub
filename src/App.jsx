@@ -12,21 +12,32 @@ function App() {
   const [editMode, setEditMode] = useState('ui'); 
   const [piiAllowed, setPiiAllowed] = useState(false);
   
-  // Real DB Data
   const [dbAssets, setDbAssets] = useState([]);
   const [dbLoading, setDbLoading] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('testing'); // testing, connected, error
 
   useEffect(() => {
     async function fetchFromSupabase() {
-      // Only fetch if Supabase URL is configured
-      if (!import.meta.env.VITE_SUPABASE_URL) return;
+      if (!import.meta.env.VITE_SUPABASE_URL) {
+        setConnectionStatus('error');
+        return;
+      }
       
       setDbLoading(true);
       try {
+        // Simple connectivity test
+        const { error: connError } = await supabase.from('profiles').select('id', { count: 'exact', head: true });
+        if (connError) {
+          setConnectionStatus('error');
+        } else {
+          setConnectionStatus('connected');
+        }
+
         const { data, error } = await supabase.from('data_assets').select('*');
         if (data) setDbAssets(data);
       } catch (err) {
         console.error('Supabase fetch error:', err);
+        setConnectionStatus('error');
       } finally {
         setDbLoading(false);
       }
@@ -150,11 +161,30 @@ function App() {
           </a>
         </nav>
 
-        <div className="user-profile" style={{ marginTop: activeGlobalNav === 'asset_detail' ? 'auto' : 'auto' }}>
-          <img src="https://i.pravatar.cc/150?img=11" alt="Profile" />
-          <div className="user-info">
-            <span className="user-name">Sarah Jenkins</span>
-            <span className="user-role">Data Architect</span>
+        <div className="user-profile" style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img src="https://i.pravatar.cc/150?img=11" alt="Profile" />
+            <div className="user-info">
+              <span className="user-name">Sarah Jenkins</span>
+              <span className="user-role">Data Architect</span>
+            </div>
+          </div>
+          
+          <div style={{ 
+            fontSize: '10px', 
+            padding: '4px 8px', 
+            borderRadius: '4px', 
+            backgroundColor: connectionStatus === 'connected' ? 'rgba(16, 185, 129, 0.1)' : connectionStatus === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)',
+            color: connectionStatus === 'connected' ? '#10b981' : connectionStatus === 'error' ? '#ef4444' : 'rgba(255,255,255,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            fontWeight: 600
+          }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: connectionStatus === 'connected' ? '#10b981' : connectionStatus === 'error' ? '#ef4444' : 'rgba(255,255,255,0.2)' }}></div>
+            Supabase: {connectionStatus}
           </div>
         </div>
       </aside>
