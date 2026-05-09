@@ -429,11 +429,102 @@ function App() {
                   </div>
                 )
               ) : activeAssetNav === 'changes' ? (
-                <div>{/* Changes UI Code */} <div className="page-title"><GitCommit size={28} /> Change Management</div><p>Changes module for this asset.</p></div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+                  <div className="header-row">
+                    <div>
+                      <div className="page-title"><GitCommit size={28} /> Change Management</div>
+                      <p className="page-description" style={{ marginTop: '0.5rem', marginBottom: '0' }}>Review, approve, and track versions of your data contracts.</p>
+                    </div>
+                  </div>
+                  <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+                    <div style={{ backgroundColor: '#F9FAFB', padding: '1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}><span className="status-badge" style={{ backgroundColor: '#FEF3C7', color: '#D97706', border: '1px solid #FDE68A' }}>In Review</span><h3 style={{ margin: 0, fontSize: '1.125rem' }}>Add geolocation fields and update SLA</h3></div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', display: 'flex', gap: '1.5rem' }}><span>Proposed by: <strong>Sarah Jenkins</strong></span><span>Target Version: <strong>v1.3.0</strong></span><span>Type: <strong style={{color: 'var(--danger)'}}>Breaking Change</strong></span></div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <button className="btn" style={{ border: '1px solid var(--border-color)', backgroundColor: 'white', color: 'var(--text-main)' }}>Request Changes</button>
+                        <button className="btn btn-black" style={{ display: 'flex', gap: '0.5rem' }}><CheckCircle2 size={16}/> Approve & Merge</button>
+                      </div>
+                    </div>
+                    <div style={{ padding: '1.5rem' }}>
+                      <div className="section-label" style={{ marginBottom: '1rem' }}>Schema Changes</div>
+                      <table className="data-table" style={{ margin: 0 }}>
+                        <thead style={{ backgroundColor: '#F9FAFB' }}><tr><th>Field</th><th>Status</th><th>Details</th></tr></thead>
+                        <tbody>
+                          <tr><td style={{ fontWeight: 500 }}>email</td><td><span style={{ backgroundColor: '#F3F4F6', color: 'var(--text-muted)', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>UNCHANGED</span></td><td style={{ color: 'var(--text-muted)' }}>string, PII Allowed</td></tr>
+                          <tr><td style={{ fontWeight: 500 }}>ip_address</td><td><span style={{ backgroundColor: '#E6FCF5', color: '#0CA678', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>ADDED</span></td><td>string, Validation: IPv4/IPv6 Format</td></tr>
+                          <tr><td style={{ fontWeight: 500, textDecoration: 'line-through', color: 'var(--text-muted)' }}>country_code</td><td><span style={{ backgroundColor: '#FFE3E3', color: '#E03131', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>REMOVED</span></td><td style={{ color: 'var(--text-muted)' }}>Replaced by location object</td></tr>
+                          <tr><td style={{ fontWeight: 500 }}>location</td><td><span style={{ backgroundColor: '#E6FCF5', color: '#0CA678', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>ADDED</span></td><td>json, Contains lat/long coordinates</td></tr>
+                        </tbody>
+                      </table>
+                      <div className="section-label" style={{ marginTop: '2rem', marginBottom: '1rem' }}>SLA Changes</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
+                        <span style={{ width: '120px', color: 'var(--text-muted)', fontSize: '0.875rem' }}>Freshness</span>
+                        <span style={{ backgroundColor: '#FFE3E3', color: '#E03131', padding: '2px 6px', borderRadius: '4px', textDecoration: 'line-through', fontSize: '0.875rem' }}>&lt; 5 minutes</span><span>➔</span><span style={{ backgroundColor: '#E6FCF5', color: '#0CA678', padding: '2px 6px', borderRadius: '4px', fontWeight: 500, fontSize: '0.875rem' }}>Real-time (&lt; 1 sec)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="section-label">Version History</div>
+                    <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}><div style={{ flex: 1 }}><div style={{ fontWeight: 600 }}>v1.2.0 <span className="status-badge status-live" style={{ padding: '0.1rem 0.5rem' }}>Active</span></div><div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Added event_type enum validation</div></div><div style={{ textAlign: 'right', fontSize: '0.875rem', color: 'var(--text-muted)' }}><div>Yesterday</div><div>by Data Engineering</div></div></div>
+                      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}><div style={{ flex: 1 }}><div style={{ fontWeight: 600 }}>v1.1.0</div><div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Enabled CI/CD Github Actions enforcement</div></div><div style={{ textAlign: 'right', fontSize: '0.875rem', color: 'var(--text-muted)' }}><div>Last month</div><div>by Sarah Jenkins</div></div></div>
+                      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem 1.5rem' }}><div style={{ flex: 1 }}><div style={{ fontWeight: 600 }}>v1.0.0</div><div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Initial contract creation</div></div><div style={{ textAlign: 'right', fontSize: '0.875rem', color: 'var(--text-muted)' }}><div>3 months ago</div><div>by System</div></div></div>
+                    </div>
+                  </div>
+                </div>
               ) : activeAssetNav === 'action' ? (
-                <div>{/* Action UI Code */} <div className="page-title"><PlaySquare size={28} /> Action & Observability</div><p>Observability for this asset.</p></div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+                  <div className="header-row">
+                    <div>
+                      <div className="page-title"><PlaySquare size={28} /> Action & Observability</div>
+                      <p className="page-description" style={{ marginTop: '0.5rem', marginBottom: '0' }}>Monitor runtime enforcement, inspect violations, and manage quarantined data.</p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }}>
+                    <div style={{ padding: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'white' }}><div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Total Violations (24h)</div><div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--danger)' }}>1,432</div></div>
+                    <div style={{ padding: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'white' }}><div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Quarantined Events</div><div style={{ fontSize: '2rem', fontWeight: 700, color: '#D97706' }}>850</div></div>
+                    <div style={{ padding: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'white' }}><div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Data Quality Score</div><div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--success)' }}>98.4%</div></div>
+                  </div>
+                  <div>
+                    <div className="section-label">Action Required: Quarantined Payloads</div>
+                    <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+                      <table className="data-table" style={{ margin: 0 }}>
+                        <thead style={{ backgroundColor: '#F9FAFB' }}><tr><th>Time</th><th>Rule Violated</th><th>Sample Payload</th><th>Actions</th></tr></thead>
+                        <tbody>
+                          <tr><td style={{ color: 'var(--text-muted)' }}>10 mins ago</td><td><span style={{ backgroundColor: '#FFE3E3', color: '#E03131', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>Schema: Unknown Field</span></td><td style={{ fontFamily: 'monospace', fontSize: '12px' }}>{`{"user_id": "123", "ip_address": "8.8.8.8"}`}</td><td style={{ display: 'flex', gap: '0.5rem' }}><button className="btn" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', border: '1px solid var(--border-color)', backgroundColor: 'white', color: 'var(--text-main)' }}>Inspect</button></td></tr>
+                          <tr><td style={{ color: 'var(--text-muted)' }}>1 hour ago</td><td><span style={{ backgroundColor: '#FFE3E3', color: '#E03131', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>PII Violation: email</span></td><td style={{ fontFamily: 'monospace', fontSize: '12px' }}>{`{"email": "alex@example.com"}`}</td><td style={{ display: 'flex', gap: '0.5rem' }}><button className="btn" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', border: '1px solid var(--border-color)', backgroundColor: 'white', color: 'var(--text-main)' }}>Inspect</button></td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}><h2>Settings Module</h2><p>Under development.</p></div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+                  <div className="header-row">
+                    <div>
+                      <div className="page-title"><Settings size={28} /> Global Settings</div>
+                      <p className="page-description" style={{ marginTop: '0.5rem', marginBottom: '0' }}>Configure global policies, domains, and workspace defaults.</p>
+                    </div>
+                    <button className="btn btn-black"><Save size={16} style={{marginRight: 6}}/> Save Changes</button>
+                  </div>
+                  <div>
+                    <div className="section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span>Global Data Policies</span>
+                      <button className="btn" style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem', border: '1px solid var(--border-color)', backgroundColor: 'white', color: 'var(--text-main)' }}>+ Add Policy</button>
+                    </div>
+                    <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+                      <table className="data-table" style={{ margin: 0 }}>
+                        <thead style={{ backgroundColor: '#F9FAFB' }}><tr><th>Policy Name</th><th>Scope</th><th>Enforcement</th><th>Status</th></tr></thead>
+                        <tbody>
+                          <tr><td style={{ fontWeight: 500 }}>No PII in Analytics Domain</td><td>Domain: Analytics</td><td><span style={{ backgroundColor: '#FFE3E3', color: '#E03131', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>BLOCK</span></td><td><span className="status-badge status-live" style={{ padding: '2px 6px' }}>Active</span></td></tr>
+                          <tr><td style={{ fontWeight: 500 }}>Require Data Processing Agreement</td><td>Cross-border Transfers</td><td><span style={{ backgroundColor: '#FEF3C7', color: '#D97706', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>WARN</span></td><td><span className="status-badge status-live" style={{ padding: '2px 6px' }}>Active</span></td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
