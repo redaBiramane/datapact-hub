@@ -236,7 +236,7 @@ function App() {
           </a>
         </nav>
 
-        <div className="user-profile" style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }}>
+        <div className="user-profile" style={{ cursor: 'pointer', marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }} onClick={() => setActiveGlobalNav('user_profile')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <img src="https://i.pravatar.cc/150?img=11" alt="Profile" />
             <div className="user-info">
@@ -422,6 +422,96 @@ function App() {
               </table>
             </div>
             <style>{`.hover-row:hover { background-color: #F9FAFB; }`}</style>
+          </div>
+        )}
+
+        {/* --- USER PROFILE / USER MANAGEMENT --- */}
+        {activeGlobalNav === 'user_profile' && (
+          <div className="main-content" style={{ padding: '3rem 4rem' }}>
+            <div className="header-row" style={{ marginBottom: '2.5rem' }}>
+              <div>
+                <div className="page-title">User Management</div>
+                <p className="page-description" style={{ marginTop: '0.5rem' }}>Manage your profile, preferences, and workspace users.</p>
+              </div>
+            </div>
+
+            {/* Profile Overview */}
+            <div style={{ backgroundColor: 'white', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '2rem', marginBottom: '3rem', display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+              <img src="https://i.pravatar.cc/150?img=11" alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', border: '4px solid #F3F4F6' }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Sarah Jenkins</h2>
+                    <div style={{ display: 'flex', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>
+                      <span>sarah.j@datapact.example.com</span>
+                      <span>•</span>
+                      <span>UTC+1 (Europe/Paris)</span>
+                    </div>
+                  </div>
+                  <span className="status-badge status-live" style={{ backgroundColor: '#E0E7FF', color: '#4F46E5', border: 'none', padding: '6px 12px' }}>Workspace Admin</span>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '2rem', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                  <div><div style={{ fontSize: '1.5rem', fontWeight: 700 }}>12</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Contracts Owned</div></div>
+                  <div><div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#D97706' }}>3</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Pending Approvals</div></div>
+                  <div><div style={{ fontSize: '1.5rem', fontWeight: 700 }}>42</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Assets Monitored</div></div>
+                </div>
+              </div>
+            </div>
+
+            {/* User Management Table (Admin Only view) */}
+            <div className="section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Workspace Members</span>
+              <button className="btn btn-black" style={{ fontSize: '0.75rem', padding: '0.5rem 1rem' }}>+ Invite User</button>
+            </div>
+            <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+              <table className="data-table" style={{ margin: 0 }}>
+                <thead style={{ backgroundColor: '#F9FAFB' }}>
+                  <tr><th>User</th><th>Role</th><th>Domain</th><th>Last Active</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Sarah" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                        <div><div style={{ fontWeight: 600 }}>Sarah Jenkins (You)</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>sarah.j@datapact.example</div></div>
+                      </div>
+                    </td>
+                    <td><span style={{ backgroundColor: '#E0E7FF', color: '#4F46E5', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>Admin</span></td>
+                    <td>Global</td>
+                    <td>Just now</td>
+                    <td><span className="status-badge status-live" style={{ padding: '2px 6px', border: 'none' }}>Active</span></td>
+                    <td><button className="btn" style={{ fontSize: '0.75rem', padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid var(--border-color)' }}>Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <img src="https://i.pravatar.cc/150?img=33" alt="Alex" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                        <div><div style={{ fontWeight: 600 }}>Alex Watanabe</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>alex.w@datapact.example</div></div>
+                      </div>
+                    </td>
+                    <td><span style={{ backgroundColor: '#F3F4F6', color: 'var(--text-main)', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>Data Owner</span></td>
+                    <td>Risk & Fraud</td>
+                    <td>2 hours ago</td>
+                    <td><span className="status-badge status-live" style={{ padding: '2px 6px', border: 'none' }}>Active</span></td>
+                    <td><button className="btn" style={{ fontSize: '0.75rem', padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid var(--border-color)' }}>Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#FEF3C7', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '12px' }}>JD</div>
+                        <div><div style={{ fontWeight: 600 }}>John Doe</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>john.d@datapact.example</div></div>
+                      </div>
+                    </td>
+                    <td><span style={{ backgroundColor: '#F3F4F6', color: 'var(--text-main)', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 600 }}>User</span></td>
+                    <td>Marketing</td>
+                    <td>3 days ago</td>
+                    <td><span className="status-badge" style={{ backgroundColor: '#F3F4F6', color: 'var(--text-muted)', padding: '2px 6px', border: 'none' }}>Offline</span></td>
+                    <td><button className="btn" style={{ fontSize: '0.75rem', padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid var(--border-color)' }}>Edit</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
